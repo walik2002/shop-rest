@@ -1,13 +1,16 @@
 package com.belous.api.models;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,4 +29,12 @@ public class Employee {
 
     @OneToOne
     private User user;
+
+    public Employee(String firstName, String lastName, String address, String phoneNumber, User user) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.user = user;
+    }
 }

@@ -1,11 +1,14 @@
 package com.belous.api.models;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Table(name = "usr")
+@NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
 public class User {
 
     @Id
@@ -17,6 +20,12 @@ public class User {
     private String password;
 
     private Role role;
+
+    public User(String username, String password, Role role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
 
     public enum Role{
         CLIENT,

@@ -4,12 +4,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Entity
 @Data
+@NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
 public class Good {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,4 +23,10 @@ public class Good {
     private int count;
 
     private BigDecimal price;
+
+    public Good( String name, int count, BigDecimal price) {
+        this.name = name;
+        this.count = count;
+        this.price = price;
+    }
 }
