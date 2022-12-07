@@ -1,0 +1,11 @@
+server:
+  port: 5000
+
+spring:
+  datasource:
+    generate-unique-name: false
+    name: internetShop
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+      defer-datasource-initialization: true

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns = "http://www.w3.org/1999/xhtml"
+      xmlns:th = "http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Internet Shop</title>
+</head>
+<body>
+    <div th:each="good: ${goods}">
+        <p th:text="${good.name}"></p>
+        <p th:text="${good.price}"></p>
+        <p th:text="${good.count}"></p>
+        <form method="get" th:action="@{/goods/edit/{id}(id = ${good.goodId})}">
+            <input type="submit" value="Редактировать">
+        </form>
+        <form method="post" th:action="@{/goods/delete/{id}(id = ${good.goodId})}">
+            <input type="submit" value="Удалить">
+        </form>
+    </div>
+    <form th:action="@{/goods/add}" th:object="${addedGood}" method="post">
+        Имя: <input type="text" th:field="*{name}"> <br>
+        Количество: <input type="text" th:field="*{count}"><br>
+        Цена: <input type="text" th:field="*{price}"><br>
+        <input type="submit" value="Принять">
+    </form>
+</body>
+</html>
