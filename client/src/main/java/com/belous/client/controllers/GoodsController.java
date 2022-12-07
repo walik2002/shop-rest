@@ -24,6 +24,12 @@ public class GoodsController {
     public Good good(){
         return new Good();
     }
+
+    @GetMapping("/add")
+    public String showAddGoodPage(){
+        return "addGood";
+    }
+
     @PostMapping("/add")
     public String addGood(@ModelAttribute Good addedGood){
         Good good = new Good(addedGood.getName(), addedGood.getCount(), addedGood.getPrice());

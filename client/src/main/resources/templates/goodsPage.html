@@ -1,27 +1,41 @@
 <!DOCTYPE html>
 <html xmlns = "http://www.w3.org/1999/xhtml"
       xmlns:th = "http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Internet Shop</title>
+<head th:replace="fragments/main.html :: head">
 </head>
-<body>
-    <div th:each="good: ${goods}">
-        <p th:text="${good.name}"></p>
-        <p th:text="${good.price}"></p>
-        <p th:text="${good.count}"></p>
-        <form method="get" th:action="@{/goods/edit/{id}(id = ${good.goodId})}">
-            <input type="submit" value="Редактировать">
-        </form>
-        <form method="post" th:action="@{/goods/delete/{id}(id = ${good.goodId})}">
-            <input type="submit" value="Удалить">
-        </form>
-    </div>
-    <form th:action="@{/goods/add}" th:object="${addedGood}" method="post">
-        Имя: <input type="text" th:field="*{name}"> <br>
-        Количество: <input type="text" th:field="*{count}"><br>
-        Цена: <input type="text" th:field="*{price}"><br>
-        <input type="submit" value="Принять">
-    </form>
+<body class="container">
+   <div th:replace="~{fragments/main :: nav}"></div>
+
+   <h1>Товары</h1>
+   <div class="album py-5 bg-light">
+       <div class="container">
+           <div class="row row-cols-1 row-cols-md-3 g-4">
+               <div th:each="good: ${goods}" class="col">
+                   <div class="card">
+                       <p th:text="'Товар: ' + ${good.name}" class="card-header"></p>
+                       <div class="card-body">
+                           <p th:text="'Цена: ' + ${good.price} +'$'" class="card-text"></p>
+                           <p th:text="'Количество: ' + ${good.count} " class="card-text"></p>
+
+                           <div d-flex justify-content-between align-items-center>
+                               <div class="btn-group">
+                                   <form method="get" th:action="@{/goods/edit/{id}(id = ${good.goodId})}">
+                                       <input type="submit" value="Редактировать" class="btn btn-sm btn-outline-secondary">
+                                   </form>
+
+                                   <form method="post" th:action="@{/goods/delete/{id}(id = ${good.goodId})}">
+                                       <input type="submit" value="Удалить" class="btn btn-sm btn-outline-secondary">
+                                   </form>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <div th:replace="~{fragments/main :: footer}"></div>
+   <div th:replace="~{fragments/main :: boot-script}"></div>
 </body>
 </html>

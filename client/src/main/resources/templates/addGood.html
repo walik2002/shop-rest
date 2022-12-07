@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns = "http://www.w3.org/1999/xhtml"
+      xmlns:th = "http://www.thymeleaf.org">
+<head th:replace="~{fragments/main :: head}"> </head>
+<body class="container">
+<nav th:replace="~{fragments/main :: nav}"></nav>
+
+<h1>Добавить новый товар</h1>
+<form th:action="@{/goods/add}" th:object="${addedGood}" method="post">
+    <label class="form-label">
+        Товар:
+        <input type="text" th:field="*{name}" class="form-control">
+    </label> <br>
+    <label class="form-label">
+        Количество:
+        <input type="text" th:field="*{count}" class="form-control">
+    </label><br>
+    <label class="form-label">
+        Цена:
+        <input type="text" th:field="*{price}" class="form-control">
+    </label><br>
+    <input type="submit" value="Добавить" class="btn btn-sm btn-outline-secondary">
+</form>
+
+<div th:replace="~{fragments/main :: footer}"></div>
+<div th:replace="~{fragments/main :: boot-script}"></div>
+</body>
+</html>
