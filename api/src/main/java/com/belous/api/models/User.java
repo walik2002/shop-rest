@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Table(name = "usr")
+@Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
 public class User {
 
