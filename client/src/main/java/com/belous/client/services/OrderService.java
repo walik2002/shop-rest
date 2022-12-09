@@ -1,6 +1,7 @@
 package com.belous.client.services;
 
 import com.belous.client.models.Good;
+import com.belous.client.models.OrderGood;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -11,15 +12,24 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 @Service
 @NoArgsConstructor
-public class RestGoodService implements GoodService{
+public class OrderService {
 
-    private final String URL = "http://localhost:5000/api/goods";
+    private final String URL = "http://localhost:5000/api/orders";
     private RestTemplate restTemplate = new RestTemplate();
+    List<Good> goodList = List.of(
 
-    public RestGoodService(@CookieValue(name = "access_token") String accessToken) {
+    );
+    OrderGood orderGood = new OrderGood(OrderGood.Status.WAITING, LocalDateTime.now(),LocalDateTime.now(),goodList);
+
+    public OrderService(@CookieValue(name = "access_token") String accessToken) {
         this.restTemplate = new RestTemplate();
         if (accessToken != null) {
             this.restTemplate
@@ -28,35 +38,14 @@ public class RestGoodService implements GoodService{
         }
     }
 
-    @Override
-    public Iterable<Good> findAll() {
+    public Iterable<OrderGood> getUserOrders(String username){
         return Arrays.asList(restTemplate.getForObject(
-                URL,
-                Good[].class));
+                URL+"/" +username,
+                OrderGood[].class));
     }
 
-    @Override
-    public Good getOne(String goodId) {
-        return restTemplate.getForObject(URL+"/"+goodId,
-                Good.class);
-    }
-
-    @Override
-    public Good addGood(Good good) {
-        return restTemplate.postForObject(
-                URL, good, Good.class);
-    }
-
-    @Override
-    public void deleteGood(String id) {
-        restTemplate.delete(URL + "/" + id);
-    }
-
-    @Override
-    public void editGood(String goodId, Good good) {
-        restTemplate.put(URL+"/"+goodId,
-                good,
-                Good.class);
+    public String saveOrder(String username){
+       return restTemplate.postForObject(URL +"/" +username,orderGood,String.class);
     }
 
     private ClientHttpRequestInterceptor

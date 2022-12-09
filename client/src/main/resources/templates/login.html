@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns = "http://www.w3.org/1999/xhtml"
+      xmlns:th = "http://www.thymeleaf.org">
+<head th:replace="~{fragments/main :: head}"> </head>
+<body class="container text-center">
+<nav th:replace="~{fragments/main :: nav}"></nav>
+
+<main class="form-signin">
+    <form method="post" th:action="@{/login}" th:object="${appUser}">
+        <h1 class="h3 mb-3 fw-normal">Пожалуйста, войдите</h1>
+
+        <div th:if = "${authEx} != null" th:text="${authEx}" class="error text-danger">
+        </div>
+        <div th:if = "${registrationMessage} != null" th:text="${registrationMessage}" class="error text-success">
+        </div>
+        <div class="form-floating">
+            <input class="form-control" id="floatingInput" placeholder="Логин" th:field="*{username}">
+            <label for="floatingInput">Логин</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" th:field="*{password}">
+            <label for="floatingPassword">Пароль</label>
+        </div>
+        </div>
+
+        <button class="w-100 btn btn-lg btn-outline-secondary" type="submit">Войти</button>
+        <a th:href="@{/registration}" th:text="${'Нет аккаунта? Зарегистрируйтесь'}"></a>
+        <p class="mt-5 mb-3 text-muted">© 2022</p>
+    </form>
+
+
+</main>
+<div th:replace="~{fragments/main :: footer}"></div>
+<div th:replace="~{fragments/main :: boot-script}"></div>
+</body>
+</html>

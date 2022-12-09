@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns = "http://www.w3.org/1999/xhtml"
+      xmlns:th = "http://www.thymeleaf.org">
+<head th:replace="~{fragments/main :: head}"> </head>
+<body class="container">
+<nav th:replace="~{fragments/main :: nav}"></nav>
+
+
+<div th:if = "${currentOrder.goods}!=null">
+    <h2>Текущий заказ: </h2>
+    <form th:action="@{/orders}" method="post" th:object="${currentOrder}">
+        <div th:each="good : ${currentOrder.goods}">
+            <h5 th:text="'Товар: ' +  ${good.name}"></h5>
+            <p th:text="'Цена:' + ${good.price}"></p>
+        </div>
+        <input type="submit" value="Ok">
+    </form>
+</div>
+
+
+<h3>Мои заказы: </h3>
+<div th:if = "${userOrders} !=null">
+    <div th:each="order: ${userOrders}">
+        <div th:text="'Заказ на дату:' + ${order.orderDate} ">
+            <h5>Заказанные товары</h5>
+            <div th:each="good : ${order.goods}">
+                <p th:text="'Товар' + ${good.name}"></p>
+                <p th:text="'Цена' + ${good.price}"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/main :: footer}"></div>
+<div th:replace="~{fragments/main :: boot-script}"></div>
+</body>
+</html>

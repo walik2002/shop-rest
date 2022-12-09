@@ -6,6 +6,7 @@
 <body class="container">
    <div th:replace="~{fragments/main :: nav}"></div>
 
+   <h3><a th:href="@{/goods/orders}">Перейти моим к заказам</a></h3>
    <h1>Товары</h1>
    <div class="album py-5 bg-light">
        <div class="container">
@@ -26,6 +27,10 @@
                                    <form method="post" th:action="@{/goods/delete/{id}(id = ${good.goodId})}">
                                        <input type="submit" value="Удалить" class="btn btn-sm btn-outline-secondary">
                                    </form>
+
+                                   <form method="post" th:action="@{/goods/order/{id}(id = ${good.goodId})}">
+                                       <input type="submit" value="Добавить к заказу">
+                                   </form>
                                </div>
                            </div>
                        </div>
@@ -34,7 +39,13 @@
            </div>
        </div>
    </div>
-
+   <div th:if = "${currentOrder}!=null">
+       <h3>Заказанные товары: </h3>
+       <div th:each="good : ${currentOrder.goods}">
+           <p th:text="'Товар' +  ${good.name}"></p>
+       </div>
+       <input type="submit" value="Ok">
+   </div>
    <div th:replace="~{fragments/main :: footer}"></div>
    <div th:replace="~{fragments/main :: boot-script}"></div>
 </body>

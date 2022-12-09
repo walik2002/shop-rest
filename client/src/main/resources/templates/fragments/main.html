@@ -23,14 +23,41 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Ссылка</a>
+                    <a class="nav-link" th:href="@{/orders}">Мои заказы</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Отключенная</a>
                 </li>
             </ul>
-            <form>
-                <input class="form-control" type="text" placeholder="Поиск" aria-label="Поиск">
+            <form method="get" th:action="@{/login}"
+                  th:unless="${#httpServletRequest.getCookies()}">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-bs-toggle="dropdown"
+                           aria-expanded="false">Учетная запись</a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdown06" >
+                            <li><button type="submit" class="dropdown-item">Войти</button></li>
+                            <li><a class="dropdown-item" th:href="@{/registration}">Регистрация</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </form>
+
+            <form method="post" th:action="@{/logout}"
+                  th:each="cookie :${#httpServletRequest.getCookies()}"
+                  th:if="${cookie.getName().equals('username')}">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown08" data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                           th:each="cookie :${#httpServletRequest.getCookies()}"
+                           th:if="${cookie.getName().equals('username')}"
+                           th:text="${cookie.getValue()}">Учетная запись</a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdown08" >
+                            <li><button type="submit" class="dropdown-item">Выйти</button></li>
+                        </ul>
+                    </li>
+                </ul>
             </form>
         </div>
     </div>

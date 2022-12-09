@@ -4,8 +4,7 @@
 <head th:replace="~{fragments/main :: head}"> </head>
 <body class="container">
     <nav th:replace="~{fragments/main :: nav}"></nav>
-
-
+    <h3 th:if ="${username !=''}" ? th:text="'Вы вошли в учетную запись: ' + ${username}"></h3>
 
     <div th:replace="~{fragments/main :: footer}"></div>
     <div th:replace="~{fragments/main :: boot-script}"></div>

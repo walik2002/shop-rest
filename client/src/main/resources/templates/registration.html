@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns = "http://www.w3.org/1999/xhtml"
+      xmlns:th = "http://www.thymeleaf.org">
+<head th:replace="~{fragments/main :: head}"> </head>
+<body class="container text-center">
+<nav th:replace="~{fragments/main :: nav}"></nav>
+
+<main class="form-signin">
+    <form method="post" th:action="@{/registration}" th:object="${registrationUser}">
+        <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
+
+        <div th:if = "${registrationMessage} != null" th:text="${registrationMessage}" class="error text-danger">
+        </div>
+        <div class="form-floating">
+            <input class="form-control" id="registrationLogin" placeholder="Логин" th:field="*{username}" >
+            <label for="registrationLogin">Логин</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="registrationPassword" placeholder="Password" th:field="*{password}" >
+            <label for="registrationPassword">Пароль</label>
+        </div>
+        </div>
+
+        <button class="w-100 btn btn-lg btn-outline-secondary" type="submit">Регистрация</button>
+        <a th:href="@{/login}" th:text="${'У меня уже есть аккаунт'}"></a>
+        <p class="mt-5 mb-3 text-muted">© 2022</p>
+    </form>
+
+
+</main>
+<div th:replace="~{fragments/main :: footer}"></div>
+<div th:replace="~{fragments/main :: boot-script}"></div>
+</body>
+</html>
