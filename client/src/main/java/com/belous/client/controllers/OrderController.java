@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 @Controller
 @RequestMapping("/orders")
@@ -15,16 +16,20 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping
-    public String showOrdersPage(Model model, @CookieValue(name = "access_token",defaultValue = "") String accessToken,
-                                 @ModelAttribute("currentOrder") OrderGood orderGood,@CookieValue(name = "username") String username){
+    public String showOrdersPage(Model model,
+                                 @CookieValue(name = "access_token",defaultValue = "") String accessToken,
+                                 @ModelAttribute("currentOrder") OrderGood orderGood,
+                                 @CookieValue(name = "username") String username){
+
         this.orderService = new OrderService(accessToken);
         Iterable<OrderGood> userOrders = orderService.getUserOrders(username);
         model.addAttribute("userOrders",userOrders);
         return "orders";
+
     }
 
     @PostMapping
-    public String save(@CookieValue(name = "username") String username){
+    public String saveOrder(@CookieValue(name = "username") String username,SessionStatus status){
         orderService.saveOrder(username);
         return "redirect:/orders";
     }
