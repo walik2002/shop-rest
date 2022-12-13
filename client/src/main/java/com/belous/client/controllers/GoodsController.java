@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -71,32 +72,36 @@ public class GoodsController {
         return "redirect:/goods";
     }
 
-    /*@ModelAttribute("currentOrder")
-    public OrderGood currentOrder(){
-        return new OrderGood();
-    }*/
-
-    @GetMapping("/orders")
-    public RedirectView orderPage(@ModelAttribute("currentOrder") OrderGood currentOrder, ModelMap model, RedirectAttributes redir){
-/*
-        model.addAttribute("currentOrder",currentOrder);
-        ModelAndView mav = new ModelAndView("redirect:/orders",model);
-        return mav;*/
-        RedirectView redirectView = new RedirectView("/orders",true);
-        redir.addFlashAttribute("currentOrder",currentOrder);
-        return redirectView;
-    }
-
-    @PostMapping("/order/{goodId}")
-    public String addGoodToOrder(@PathVariable("goodId") Long goodId,Model model){
+    @ModelAttribute(name = "currentOrder")
+    public OrderGood currentOrder(Model model){
         OrderGood currentOrder;
         if(!model.containsAttribute("currentOrder")){
-             currentOrder = new OrderGood();
+            currentOrder = new OrderGood();
         }else {
             currentOrder = (OrderGood) model.getAttribute("currentOrder");
         }
+        return currentOrder;
+    }
+
+    @PostMapping("/order/{goodId}")
+    public String addGoodToOrder(@PathVariable("goodId") Long goodId,Model model,@ModelAttribute(name = "currentOrder") OrderGood currentOrder){
         currentOrder.addGood(goodService.getOne(goodId.toString()));
-        model.addAttribute("currentOrder",currentOrder);
+        //model.addAttribute("currentOrder",currentOrder);
+        return "redirect:/goods";
+    }
+
+    @PostMapping("/removeGood/{goodId}")
+    public String removeGoodFromCart(@PathVariable("goodId") Long goodId,@ModelAttribute(name = "currentOrder") OrderGood currentOrder){
+        List<Good> copyGoods = new ArrayList<>();
+        for (Good good : currentOrder.getGoods())
+            copyGoods.add(good);
+
+        for (Good good : copyGoods){
+            if(goodId.equals(good.getGoodId()))
+                currentOrder.getGoods().remove(good);
+        }
+        if(currentOrder.getGoods().size() == 0)
+            currentOrder.setGoods(null);
         return "redirect:/goods";
     }
 }

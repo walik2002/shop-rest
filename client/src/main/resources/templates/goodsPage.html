@@ -6,8 +6,41 @@
 <body class="container">
    <div th:replace="~{fragments/main :: nav}"></div>
 
-   <h3><a th:href="@{/goods/orders}">Перейти моим к заказам</a></h3>
-   <h1>Товары</h1>
+   <div class="accordion"  id="accordionExample">
+       <div class="accordion-item">
+           <h2 class="accordion-header">
+               <button class="accordion-button collapsed"
+                       type="button"
+                       data-bs-toggle="collapse"
+                       th:attr="data-bs-target = ${'#collapse'}, aria-controls = ${'collapse'}"
+                       aria-expanded="false"
+                       th:text="'Корзина'">
+               </button>
+           </h2>
+           <div th:attr="id = ${'collapse'}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+               <div class="accordion-body">
+                   <div th:if = "${currentOrder}!=null">
+                       <div th:if = "${currentOrder.goods}!=null" class="card" style="margin: 0">
+                           <h3 class="card-header">Товары в корзине: </h3>
+                           <div class="card-body">
+                               <div th:each="good : ${currentOrder.goods}">
+                                   <p >
+                                       <form method="post" th:action="@{/goods/removeGood/{id}(id = ${good.goodId})}">
+                                            <span th:text="'Товар: ' +  ${good.name}"></span>
+                                            <button type="submit" class="btn-close" aria-label="Close"></button>
+                                       </form>
+                                   </p>
+                               </div>
+                               <a class="link-dark" th:href="@{/orders}">Перейти к заказу</a>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <h1>Каталог товаров</h1>
    <div class="album py-5 bg-light">
        <div class="container">
            <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -27,24 +60,30 @@
                                    <form method="post" th:action="@{/goods/delete/{id}(id = ${good.goodId})}">
                                        <input type="submit" value="Удалить" class="btn btn-sm btn-outline-secondary">
                                    </form>
-
-                                   <form method="post" th:action="@{/goods/order/{id}(id = ${good.goodId})}">
-                                       <input type="submit" value="Добавить к заказу">
-                                   </form>
                                </div>
+                               <form method="post" th:action="@{/goods/order/{id}(id = ${good.goodId})}" style="margin-top: 10px">
+
+                                   <div th:unless="${currentOrder?.goods}">
+                                           <button type="submit"
+                                                  th:text="'Добавить в корзину'"
+                                                   class="btn btn-sm btn-outline-primary"></button>
+                                   </div>
+                                   <div th:if="${currentOrder?.goods}">
+                                       <button type="submit"
+                                               th:text="${currentOrder.isGoodPresent(good.goodId)}?'Добавлено':'Добавить в корзину'"
+                                               class="btn btn-sm btn-outline-primary"
+                                               th:classappend="${currentOrder.isGoodPresent(good.goodId)}?'disabled':''">
+
+                                       </button>
+                                   </div>
+
+                               </form>
                            </div>
                        </div>
                    </div>
                </div>
            </div>
        </div>
-   </div>
-   <div th:if = "${currentOrder}!=null">
-       <h3>Заказанные товары: </h3>
-       <div th:each="good : ${currentOrder.goods}">
-           <p th:text="'Товар' +  ${good.name}"></p>
-       </div>
-       <input type="submit" value="Ok">
    </div>
    <div th:replace="~{fragments/main :: footer}"></div>
    <div th:replace="~{fragments/main :: boot-script}"></div>

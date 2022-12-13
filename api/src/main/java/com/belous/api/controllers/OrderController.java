@@ -40,4 +40,15 @@ public class OrderController {
 
         return "Заказ добавлен";
     }
+    @GetMapping("/order/{orderId}")
+    private OrderGood findOrderById(@PathVariable("orderId") Long orderId){
+        return orderGoodRepository.findById(orderId).orElseThrow();
+    }
+
+    @PostMapping("/order/cancel")
+    private String saveOrder(@RequestBody OrderGood orderGood){
+        orderGoodRepository.save(orderGood);
+        return "Заказ отменен";
+    }
+
 }

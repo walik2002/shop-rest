@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,9 @@ public class OrderGood {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     LocalDateTime orderCompletionDate;
 
-    private List<Good> goods = new ArrayList<>();
+    private List<Good> goods;
+
+    private Long userId;
 
     public OrderGood(Status status, LocalDateTime orderDate, LocalDateTime orderCompletionDate, List<Good> goods) {
         this.status = status;
@@ -41,6 +44,27 @@ public class OrderGood {
     }
 
     public void addGood(Good good){
+        if(goods==null){
+            goods = new ArrayList<>();
+        }
         this.goods.add(good);
+    }
+    public String totalPrice(){
+        BigDecimal total = new BigDecimal(0);
+        for(Good good : goods){
+            total = total.add(good.getPrice());
+        }
+        return total.toString();
+    }
+
+    public String getStatusString() {
+        return status.toString();
+    }
+    public boolean isGoodPresent(Long id){
+        for(Good good: goods){
+            if(good.getGoodId().equals(id))
+                return true;
+        }
+        return false;
     }
 }

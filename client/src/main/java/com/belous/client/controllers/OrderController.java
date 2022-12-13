@@ -9,28 +9,48 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/orders")
 @RequiredArgsConstructor
+@SessionAttributes("currentOrder")
 public class OrderController {
     private OrderService orderService;
 
     @GetMapping
     public String showOrdersPage(Model model,
                                  @CookieValue(name = "access_token",defaultValue = "") String accessToken,
-                                 @ModelAttribute("currentOrder") OrderGood orderGood,
                                  @CookieValue(name = "username") String username){
 
         this.orderService = new OrderService(accessToken);
         Iterable<OrderGood> userOrders = orderService.getUserOrders(username);
-        model.addAttribute("userOrders",userOrders);
+        model.addAttribute("userOrders", sortByDate((List<OrderGood>) userOrders));
         return "orders";
 
     }
 
     @PostMapping
-    public String saveOrder(@CookieValue(name = "username") String username,SessionStatus status){
-        orderService.saveOrder(username);
+    public String saveOrder(@CookieValue(name = "username") String username,@ModelAttribute("currentOrder") OrderGood currentOrder,SessionStatus status){
+        orderService.saveOrder(username,currentOrder);
+        status.setComplete();
         return "redirect:/orders";
+    }
+
+    @PostMapping("/cancel/{orderId}")
+    public String cancelOrder(@PathVariable("orderId") Long orderId){
+        OrderGood canceledOrder = orderService.getById(orderId);
+        canceledOrder.setStatus(OrderGood.Status.CANCELED);
+        orderService.cancelOrder(canceledOrder);
+        return "redirect:/orders";
+    }
+
+    public Iterable<OrderGood> sortByDate(List<OrderGood> goods){
+        return goods
+                .stream()
+                .sorted(Comparator.comparing(OrderGood::getOrderDate).reversed())
+                .collect(Collectors.toList());
     }
 }

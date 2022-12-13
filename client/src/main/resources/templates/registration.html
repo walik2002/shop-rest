@@ -19,6 +19,26 @@
             <input type="password" class="form-control" id="registrationPassword" placeholder="Password" th:field="*{password}" >
             <label for="registrationPassword">Пароль</label>
         </div>
+
+        <div class="form-floating">
+            <input class="form-control" id="name" placeholder="Имя" th:field="*{firstName}" >
+            <label for="registrationLogin">Имя</label>
+        </div>
+
+        <div class="form-floating">
+            <input class="form-control" id="surname" placeholder="Фамилия" th:field="*{lastName}" >
+            <label for="registrationLogin">Фамилия</label>
+        </div>
+
+        <div class="form-floating">
+            <input class="form-control" id="address" placeholder="Адрес" th:field="*{address}" >
+            <label for="registrationLogin">Адрес</label>
+        </div>
+
+        <div class="form-floating">
+            <input class="form-control" id="phoneNumber" placeholder="Номер телефона" th:field="*{phoneNumber}" >
+            <label for="registrationLogin">Номер телефона</label>
+        </div>
         </div>
 
         <button class="w-100 btn btn-lg btn-outline-secondary" type="submit">Регистрация</button>

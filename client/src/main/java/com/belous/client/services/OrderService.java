@@ -24,10 +24,6 @@ public class OrderService {
 
     private final String URL = "http://localhost:5000/api/orders";
     private RestTemplate restTemplate = new RestTemplate();
-    List<Good> goodList = List.of(
-
-    );
-    OrderGood orderGood = new OrderGood(OrderGood.Status.WAITING, LocalDateTime.now(),LocalDateTime.now(),goodList);
 
     public OrderService(@CookieValue(name = "access_token") String accessToken) {
         this.restTemplate = new RestTemplate();
@@ -44,8 +40,19 @@ public class OrderService {
                 OrderGood[].class));
     }
 
-    public String saveOrder(String username){
-       return restTemplate.postForObject(URL +"/" +username,orderGood,String.class);
+    public String saveOrder(String username,OrderGood orderGood){
+       orderGood.setOrderDate(LocalDateTime.now());
+       orderGood.setStatus(OrderGood.Status.WAITING);
+       return restTemplate.postForObject(URL +"/" +username, orderGood, String.class);
+    }
+
+    public OrderGood getById(Long orderId){
+
+        return restTemplate.getForObject(URL+"/order/"+orderId,OrderGood.class);
+    }
+
+    public String cancelOrder(OrderGood orderGood){
+        return  restTemplate.postForObject(URL + "/order/cancel",orderGood,String.class);
     }
 
     private ClientHttpRequestInterceptor
