@@ -1,7 +1,6 @@
 package com.belous.client.services;
 
-import com.belous.client.models.Good;
-import com.belous.client.models.OrderGood;
+import com.belous.client.models.User;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -12,20 +11,16 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
 @Service
 @NoArgsConstructor
-public class OrderService {
-
-    private final String URL = "http://localhost:5000/api/orders";
+public class UserService {
+    private final String URL = "http://localhost:5000/users";
     private RestTemplate restTemplate = new RestTemplate();
 
-    public OrderService(@CookieValue(name = "access_token") String accessToken) {
+    public UserService(@CookieValue(name = "access_token") String accessToken) {
         this.restTemplate = new RestTemplate();
         if (accessToken != null) {
             this.restTemplate
@@ -34,30 +29,12 @@ public class OrderService {
         }
     }
 
-    public Iterable<OrderGood> getAllOrders(){
-        return Arrays.asList(restTemplate.getForObject(URL,OrderGood[].class));
+    public Iterable<User> getAllUsers(){
+        return Arrays.asList(restTemplate.getForObject(URL,User[].class));
     }
 
-    public Iterable<OrderGood> getUserOrders(String username){
-        return Arrays.asList(restTemplate.getForObject(
-                URL+"/" +username,
-                OrderGood[].class));
-    }
 
-    public String saveOrder(String username,OrderGood orderGood){
-       orderGood.setOrderDate(LocalDateTime.now());
-       orderGood.setStatus(OrderGood.Status.WAITING);
-       return restTemplate.postForObject(URL +"/" +username, orderGood, String.class);
-    }
 
-    public OrderGood getById(Long orderId){
-
-        return restTemplate.getForObject(URL+"/order/"+orderId,OrderGood.class);
-    }
-
-    public String cancelOrder(OrderGood orderGood){
-        return  restTemplate.postForObject(URL + "/order/cancel",orderGood,String.class);
-    }
 
     private ClientHttpRequestInterceptor
     getBearerTokenInterceptor(String accessToken) {

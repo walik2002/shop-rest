@@ -80,7 +80,13 @@
                     <b>Итоговая цена: </b>
                     <span th:text="${order.totalPrice()}+'$'"></span>
                 </div>
-                <form method="post" th:action="@{/orders/cancel/{id}(id = ${order.orderId})}" th:unless="${order.getStatusString() == 'CANCELED'}">
+
+                <form method="post" th:action="@{/orders/done/{id}(id = ${order.orderId})}" th:if="${order.getStatusString() == 'PROCESSING'}">
+                    <button type="submit" class="btn btn-outline-success">Подтвердить выполнение</button>
+                </form>
+
+                <form method="post" th:action="@{/orders/cancel/{id}(id = ${order.orderId})}"
+                      th:unless="${order.getStatusString() == 'CANCELED' or order.getStatusString() == 'DONE'}" style="margin-top: 10px">
                     <button type="submit" class="btn btn-outline-danger">Отменить заказ</button>
                 </form>
             </div>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns = "http://www.w3.org/1999/xhtml"
+      xmlns:th = "http://www.thymeleaf.org">
+<head th:replace="~{fragments/main :: head}"> </head>
+<body class="container">
+<nav th:replace="~{fragments/main :: nav}"></nav>
+<h2>Заказы клиентов</h2>
+<form th:action="@{/admin/orders/status}" method="get">
+    <select th:name = "statusFilter" class="form-select">
+        <option th:each="status : ${statuses}" th:value="${status}"
+                th:text = " ${(status == 'WAITING' ? 'Ожидающие обработки': '')+
+                   (status == 'PROCESSING' ? 'Обрабатывающиеся':'')+
+                   (status == 'CANCELED' ?  'Отмененнные':'')+
+                   (status == 'DONE' ?'Выполнененные':'')}">
+
+        </option>
+    </select>
+    <input type="submit" value="Найти заказы" class="btn btn-outline-secondary">
+</form>
+<div th:if = "${orders} !=null" class="accordion"  id="accordionExample">
+    <div th:each="order: ${orders}" class="accordion-item"
+         th:classappend=
+                 "${(order.getStatusString() == 'WAITING' ? ' border-warning': '')+
+                   (order.getStatusString() == 'PROCESSING' ? 'border-info':'')+
+                   (order.getStatusString() == 'CANCELED' ?  'border-danger':'')+
+                   (order.getStatusString() == 'DONE' ?'border-success':'')}">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    th:attr="data-bs-target = ${'#collapse'+ order.orderId}, aria-controls = ${'collapse'+ order.orderId}"
+                    aria-expanded="false"
+                    th:text="'Заказ на дату: ' + ${#temporals.format(order.orderDate, 'dd-MM-yyyy HH:mm')}">
+                Элемент аккордеона #1
+            </button>
+        </h2>
+        <div th:attr="id = ${'collapse'+ order.orderId}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+
+                <p>
+                    Пользователь: <span th:text="${order.user.username}"></span>
+                </p>
+                <p>
+                    Имя: <span th:text="${order.user.firstName} + ' ' + ${order.user.lastName} "></span>
+                </p>
+
+                <p>
+                    Адрес: <span th:text="${order.user.address}"></span>
+                </p>
+
+                <p>
+                    Номер телефона: <span th:text="${order.user.phoneNumber}"></span>
+                </p>
+
+                <p>
+                    Статус заказа:
+                    <span th:text = " ${(order.getStatusString() == 'WAITING' ? ' ожидает обработки': '')+
+                   (order.getStatusString() == 'PROCESSING' ? 'обрабатывается':'')+
+                   (order.getStatusString() == 'CANCELED' ?  'отменен':'')+
+                   (order.getStatusString() == 'DONE' ?'выполнен':'')}">
+
+                    </span>
+                </p>
+                <p>Заказанные товары: </p>
+                <div th:each="good : ${order.goods}" class="card">
+                    <div class="card-body">
+                        <p class="">
+                            <span>Товар: </span>
+                            <b th:text="${good.name}"></b>
+                        </p>
+                        <p>
+                            <span>Цена: </span>
+                            <span th:text="${good.price} + '$'"></span>
+                        </p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <b>Итоговая цена: </b>
+                    <span th:text="${order.totalPrice()}+'$'"></span>
+                </div>
+                
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  th:if="${order.getStatusString() == 'WAITING'}">
+                    Выбрать дату выполнения
+                </button>
+
+                <!-- Модальное окно -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <form method="post" th:action="@{/admin/orders/confirm/{id}(id = ${order.orderId})}" th:object="${orderCompletionDate}" class="container">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Выбор даты выполнения заказа</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                    <div  class="row">
+                                        <input type="datetime-local" class="col-auto form-control" th:field = "*{dateTime}">
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                <button type="submit" class="col-auto btn btn-outline-primary" style="margin-top: 10px">Подтвердить</button>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+
+                </p>
+
+                <form method="post" th:action="@{/orders/cancel/{id}(id = ${order.orderId})}" th:unless="${order.getStatusString() == 'CANCELED' or order.getStatusString() == 'DONE'}">
+                    <button type="submit" class="btn btn-outline-danger">Отменить заказ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/main :: footer}"></div>
+<div th:replace="~{fragments/main :: boot-script}"></div>
+</body>
+</html>

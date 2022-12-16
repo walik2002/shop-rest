@@ -2,12 +2,25 @@
 <html xmlns = "http://www.w3.org/1999/xhtml"
       xmlns:th = "http://www.thymeleaf.org">
 <head th:replace="~{fragments/main :: head}"> </head>
-<body>
-    <form th:action="@{/goods/edit/{id}(id = ${editedGood.goodId})}" th:object="${editedGood}" method="post">
-        Имя: <input type="text" th:field="*{name}"> <br>
-        Количество: <input type="text" th:field="*{count}"><br>
-        Цена: <input type="text" th:field="*{price}"><br>
-        <input type="submit" value="Принять">
-    </form>
+<body class="container">
+<nav th:replace="~{fragments/main :: nav}"></nav>
+<h2>Редактирование товара</h2>
+<form th:action="@{/goods/edit/{id}(id = ${editedGood.goodId})}" th:object="${editedGood}" method="post">
+    <label class="form-label">
+        Товар:
+        <input type="text" th:field="*{name}" class="form-control">
+    </label> <br>
+    <label class="form-label">
+        Количество:
+        <input type="text" th:field="*{count}" class="form-control">
+    </label><br>
+    <label class="form-label">
+        Цена:
+        <input type="text" th:field="*{price}" class="form-control">
+    </label><br>
+    <input type="submit" value="Принять" class="btn btn-sm btn-outline-secondary">
+</form>
+<div th:replace="~{fragments/main :: footer}"></div>
+<div th:replace="~{fragments/main :: boot-script}"></div>
 </body>
 </html>

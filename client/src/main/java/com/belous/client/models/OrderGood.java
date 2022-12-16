@@ -9,7 +9,9 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
@@ -28,6 +30,8 @@ public class OrderGood {
     private List<Good> goods;
 
     private Long userId;
+
+    private User user;
 
     public OrderGood(Status status, LocalDateTime orderDate, LocalDateTime orderCompletionDate, List<Good> goods) {
         this.status = status;
@@ -66,5 +70,12 @@ public class OrderGood {
                 return true;
         }
         return false;
+    }
+
+    public static Iterable<OrderGood> sortByDate(List<OrderGood> goods){
+        return goods
+                .stream()
+                .sorted(Comparator.comparing(OrderGood::getOrderDate).reversed())
+                .collect(Collectors.toList());
     }
 }

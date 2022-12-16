@@ -4,6 +4,7 @@ import com.belous.client.models.OrderGood;
 import com.belous.client.services.OrderService;
 import com.belous.client.services.RestGoodService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class OrderController {
 
         this.orderService = new OrderService(accessToken);
         Iterable<OrderGood> userOrders = orderService.getUserOrders(username);
-        model.addAttribute("userOrders", sortByDate((List<OrderGood>) userOrders));
+        model.addAttribute("userOrders", OrderGood.sortByDate((List<OrderGood>) userOrders));
         return "orders";
 
     }
@@ -47,10 +48,11 @@ public class OrderController {
         return "redirect:/orders";
     }
 
-    public Iterable<OrderGood> sortByDate(List<OrderGood> goods){
-        return goods
-                .stream()
-                .sorted(Comparator.comparing(OrderGood::getOrderDate).reversed())
-                .collect(Collectors.toList());
+    @PostMapping("/done/{orderId}")
+    public String doneOrder(@PathVariable("orderId") Long orderId){
+        OrderGood canceledOrder = orderService.getById(orderId);
+        canceledOrder.setStatus(OrderGood.Status.DONE);
+        orderService.cancelOrder(canceledOrder);
+        return "redirect:/orders";
     }
 }

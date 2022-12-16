@@ -46,7 +46,7 @@ public class OrderController {
     }
 
     @PostMapping("/order/cancel")
-    private String saveOrder(@RequestBody OrderGood orderGood){
+    private String cancelOrder(@RequestBody OrderGood orderGood){
         orderGoodRepository.save(orderGood);
         return "Заказ отменен";
     }
