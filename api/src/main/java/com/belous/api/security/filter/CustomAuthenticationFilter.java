@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -69,12 +70,24 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authentication) throws IOException, ServletException {
         User user = (User)authentication.getPrincipal();
-        String accessToken = JwtUtil.createAccessToken(user.getUsername(), request.getRequestURL().toString(),
-                user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        List<String> authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        String accessToken = JwtUtil.createAccessToken(user.getUsername(), request.getRequestURL().toString(),authorities);
         String refreshToken = JwtUtil.createRefreshToken(user.getUsername());
         response.addHeader("access_token", accessToken);
         response.addHeader("refresh_token", refreshToken);
         response.addHeader("username",user.getUsername());
+        String role = "";
+        for (String authority: authorities){
+            if(authority.equals("ROLE_ADMIN"))
+            {
+                role = "admin";
+                break;
+            }
+            else
+                role = "user";
+        }
+        response.addHeader("roles",role);
+
     }
 
     @Override

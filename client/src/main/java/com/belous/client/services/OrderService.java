@@ -1,6 +1,5 @@
 package com.belous.client.services;
 
-import com.belous.client.models.Good;
 import com.belous.client.models.OrderGood;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpRequest;
@@ -12,11 +11,8 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @Service
 @NoArgsConstructor
@@ -44,10 +40,10 @@ public class OrderService {
                 OrderGood[].class));
     }
 
-    public String saveOrder(String username,OrderGood orderGood){
+    public OrderGood saveOrder(String username, OrderGood orderGood){
        orderGood.setOrderDate(LocalDateTime.now());
        orderGood.setStatus(OrderGood.Status.WAITING);
-       return restTemplate.postForObject(URL +"/" +username, orderGood, String.class);
+       return restTemplate.postForObject(URL +"/" +username, orderGood, OrderGood.class);
     }
 
     public OrderGood getById(Long orderId){

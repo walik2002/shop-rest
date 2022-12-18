@@ -44,8 +44,10 @@ public class LoginController {
         if (!headers.containsKey("error")) {
             Cookie token_cookie = new Cookie("access_token",headers.get("access_token"));
             Cookie username_cookie = new Cookie("username",headers.get("username"));
+            Cookie role_cookie = new Cookie("role",headers.get("roles"));
             response.addCookie(token_cookie);
             response.addCookie(username_cookie);
+            response.addCookie(role_cookie);
         } else {
             authEx = headers.get("error");
             model.addAttribute("authEx",authEx);

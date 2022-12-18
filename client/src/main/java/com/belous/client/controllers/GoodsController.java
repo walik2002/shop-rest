@@ -8,6 +8,7 @@ import com.belous.client.services.LoginService;
 import com.belous.client.services.RestGoodService;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.bouncycastle.math.raw.Mod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -31,9 +32,11 @@ public class GoodsController {
     private GoodService goodService;
 
     @GetMapping
-    public String showGoodsPage(Model model,@CookieValue(name = "access_token",defaultValue = "") String accessToken){
+    public String showGoodsPage(Model model,@CookieValue(name = "access_token",defaultValue = "") String accessToken,
+                                @CookieValue(name = "role",defaultValue = "user") String role){
         this.goodService = new RestGoodService(accessToken);
         model.addAttribute("goods", goodService.findAll());
+        model.addAttribute("role",role);
         return "goodsPage";
     }
     @ModelAttribute(name = "addedGood")
@@ -42,7 +45,9 @@ public class GoodsController {
     }
 
     @GetMapping("/add")
-    public String showAddGoodPage(@CookieValue(name = "access_token",defaultValue = "") String accessToken){
+    public String showAddGoodPage(@CookieValue(name = "access_token",defaultValue = "") String accessToken,
+                                  @CookieValue(name = "role",defaultValue = "")String role, Model model){
+        model.addAttribute("role",role);
         this.goodService = new RestGoodService(accessToken);
         return "addGood";
     }
@@ -60,9 +65,11 @@ public class GoodsController {
         return "redirect:/goods";
     }
     @GetMapping("/edit/{id}")
-    public String showEditPage(@PathVariable("id") String goodId,Model model){
+    public String showEditPage(@PathVariable("id") String goodId,Model model,
+                               @CookieValue(name = "role",defaultValue = "")String role){
         Good editedGood = goodService.getOne(goodId);
         model.addAttribute("editedGood",editedGood);
+        model.addAttribute("role",role);
         return "editGood";
     }
     @PostMapping("/edit/{id}")

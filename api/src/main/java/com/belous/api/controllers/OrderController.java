@@ -5,6 +5,7 @@ import com.belous.api.models.OrderGood;
 import com.belous.api.models.UserEntity;
 import com.belous.api.repos.OrderGoodRepository;
 import com.belous.api.services.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,15 +31,15 @@ public class OrderController {
         return orderGoodRepository.findOrderGoodsByUser(user);
     }
     @PostMapping("/{username}")
-    private String saveUserOrder(@PathVariable("username") String username,@RequestBody OrderGood orderGood){
+    private ResponseEntity<OrderGood> saveUserOrder(@PathVariable("username") String username, @RequestBody OrderGood orderGood){
         UserEntity user = userService.findByUsername(username);
 
         OrderGood newOrderGood = orderGood;
         newOrderGood.setUserId(user.getId());
 
-        orderGoodRepository.save(newOrderGood);
 
-        return "Заказ добавлен";
+
+        return ResponseEntity.ok(orderGoodRepository.save(newOrderGood));
     }
     @GetMapping("/order/{orderId}")
     private OrderGood findOrderById(@PathVariable("orderId") Long orderId){

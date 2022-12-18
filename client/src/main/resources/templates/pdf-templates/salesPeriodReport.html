@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html>
+<html  xmlns:th = "http://www.thymeleaf.org">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <style type='text/css'>
+        * { font-family: 'Arial Unicode MS'; }
+
+        td{
+            padding-right: 50px;
+        }
+        p{
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        .totalPrice{
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Отчет по продажам с
+    <span th:text="${#temporals.format(datePeriod.dateFrom, 'dd-MM-yyyy HH:mm')}"></span> по
+    <span th:text="${#temporals.format(datePeriod.dateTo, 'dd-MM-yyyy HH:mm')}"></span>
+</h2>
+
+
+<div th:each="order : ${orders}">
+
+    <h3>Заказ #<span th:text="${order.orderId}"></span></h3>
+    <p th:text="'Дата заказа: ' + ${#temporals.format(order.orderDate, 'dd-MM-yyyy HH:mm')}"></p>
+
+    <p>
+        Статус заказа:
+        <span th:text = " ${(order.getStatusString() == 'WAITING' ? ' ожидает обработки': '')+
+                   (order.getStatusString() == 'PROCESSING' ? 'обрабатывается':'')+
+                   (order.getStatusString() == 'CANCELED' ?  'отменен':'')+
+                   (order.getStatusString() == 'DONE' ?'выполнен':'')}">
+
+                    </span>
+    </p>
+
+    <p>
+        Пользователь: <span th:text="${order.user.username}"></span>
+    </p>
+    <p>
+        Имя: <span th:text="${order.user.firstName} + ' ' + ${order.user.lastName} "></span>
+    </p>
+
+    <p>
+        Адрес: <span th:text="${order.user.address}"></span>
+    </p>
+
+    <p>
+        Номер телефона: <span th:text="${order.user.phoneNumber}"></span>
+    </p>
+
+
+
+    <table>
+        <caption>Заказанные товары</caption>
+        <thead>
+        <tr>
+            <td>Наименование товара</td>
+            <td>Цена</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="good : ${order.goods}">
+            <td th:text="${good.name}"></td>
+            <td th:text="${good.price}+'$'"></td>
+        </tr>
+        </tbody>
+    </table>
+    <p class="totalPrice">
+        <span>Итоговая цена: </span>
+        <span th:text="${order.totalPrice()}+'$'"></span>
+    </p>
+</div>
+
+<h3>Итоговая выручка с
+    <span th:text="${#temporals.format(datePeriod.dateFrom, 'dd-MM-yyyy HH:mm')}"></span> по
+    <span th:text="${#temporals.format(datePeriod.dateTo, 'dd-MM-yyyy HH:mm')}"></span>:
+    <span th:text="${totalReportPrice}"></span>$
+</h3>
+
+
+
+
+<!--
+<h3>Чек заказа #<span th:text="${currentOrder.orderId}"></span></h3>
+<p th:text="'Дата заказа: ' + ${#temporals.format(currentOrder.orderDate, 'dd-MM-yyyy HH:mm')}"></p>
+<table>
+    <thead>
+    <tr>
+        <td>Наименование товара</td>
+        <td>Цена</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="good : ${currentOrder.goods}">
+        <td th:text="${good.name}"></td>
+        <td th:text="${good.price}+'$'"></td>
+    </tr>
+    </tbody>
+</table>
+<p>
+    <b>Итоговая цена: </b>
+    <span th:text="${currentOrder.totalPrice()}+'$'"></span>
+</p>-->
+</body>
+</html>

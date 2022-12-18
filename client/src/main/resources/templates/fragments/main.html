@@ -18,15 +18,15 @@
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-bs-toggle="dropdown" aria-expanded="false">Товары</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown07">
                         <li><a class="dropdown-item" th:href="@{/goods}">Каталог товаров</a></li>
-                        <li><a class="dropdown-item" th:href="@{/goods/add}">Добавить товар</a></li>
+                        <li th:if="${role=='admin'}"><a class="dropdown-item" th:href="@{/goods/add}">Добавить товар</a></li>
                     </ul>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/orders}">Мои заказы</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Отключенная</a>
+                <li class="nav-item" th:if="${role=='admin'}">
+                    <a class="nav-link" th:href="@{/admin/orders}" tabindex="-1">Заказы клиентов</a>
                 </li>
             </ul>
             <form method="get" th:action="@{/login}"

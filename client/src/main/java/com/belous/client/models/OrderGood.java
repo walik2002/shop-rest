@@ -53,12 +53,12 @@ public class OrderGood {
         }
         this.goods.add(good);
     }
-    public String totalPrice(){
+    public BigDecimal totalPrice(){
         BigDecimal total = new BigDecimal(0);
         for(Good good : goods){
             total = total.add(good.getPrice());
         }
-        return total.toString();
+        return total;
     }
 
     public String getStatusString() {

@@ -5,7 +5,10 @@
 <body class="container">
 <nav th:replace="~{fragments/main :: nav}"></nav>
 <h2>Заказы клиентов</h2>
-<form th:action="@{/admin/orders/status}" method="get">
+<form th:action="@{/admin/orders/status}" method="get" th:object="${datePeriod}">
+
+    <input type="datetime-local" th:field="*{dateFrom}">
+    <input type="datetime-local" th:field="*{dateTo}">
     <select th:name = "statusFilter" class="form-select">
         <option th:each="status : ${statuses}" th:value="${status}"
                 th:text = " ${(status == 'WAITING' ? 'Ожидающие обработки': '')+
@@ -116,6 +119,9 @@
         </div>
     </div>
 </div>
+<form th:action="@{/admin/orders/pdf}" method="post">
+    <input type="submit" class="btn btn-outline-primary" value="Сохранить отчет в PDF">
+</form>
 
 <div th:replace="~{fragments/main :: footer}"></div>
 <div th:replace="~{fragments/main :: boot-script}"></div>

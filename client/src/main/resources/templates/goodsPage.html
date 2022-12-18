@@ -52,7 +52,7 @@
                            <p th:text="'Количество: ' + ${good.count} " class="card-text"></p>
 
                            <div d-flex justify-content-between align-items-center>
-                               <div class="btn-group">
+                               <div class="btn-group" th:if="${role=='admin'}">
                                    <form method="get" th:action="@{/goods/edit/{id}(id = ${good.goodId})}">
                                        <input type="submit" value="Редактировать" class="btn btn-sm btn-outline-secondary">
                                    </form>

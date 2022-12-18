@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
 
     @GetMapping
-    public String showHomePage(@CookieValue(name = "username",defaultValue = "") String username, Model model){
+    public String showHomePage(@CookieValue(name = "username",defaultValue = "") String username,
+                               @CookieValue(name = "role",defaultValue = "")String role, Model model){
 
         if(username !="")
-        {model.addAttribute("username",username);}
+        {
+            model.addAttribute("username",username);
+            model.addAttribute("role",role);
+        }
         return "home";
     }
 }

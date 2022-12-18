@@ -65,6 +65,7 @@ public class UserResource {
                 Map<String, String> tokenMap = userService.refreshToken(authorizationHeader, request.getRequestURL().toString());
                 response.addHeader("username",tokenMap.get("username"));
                 response.addHeader("access_token", tokenMap.get("access_token"));
+                response.addHeader("roles", tokenMap.get("roles"));
             }
             catch (Exception e) {
                 log.error(String.format("Error refresh token: %s", authorizationHeader), e);

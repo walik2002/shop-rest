@@ -32,6 +32,7 @@ public class LoginService {
         }
 
         return Map.of("access_token",response.getHeaders().getFirst("access_token"),
-                "username",response.getHeaders().getFirst("username"));
+                "username",response.getHeaders().getFirst("username"),
+                "roles",response.getHeaders().getFirst("roles"));
     }
 }

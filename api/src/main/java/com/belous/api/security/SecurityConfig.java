@@ -39,6 +39,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authz) -> authz
                         .antMatchers(HttpMethod.POST, "/login/**","/registration/**").permitAll()
                         .antMatchers("/users/**").hasAuthority("ROLE_ADMIN")
+                        .antMatchers(HttpMethod.POST,"/api/goods/**").hasAuthority("ROLE_ADMIN")
+                        .antMatchers(HttpMethod.DELETE,"/api/goods/**").hasAuthority("ROLE_ADMIN")
+                        .antMatchers(HttpMethod.PUT,"/api/goods/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
 
                 )

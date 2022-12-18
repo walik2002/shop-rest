@@ -27,7 +27,7 @@
                     <b>Итоговая цена: </b>
                     <span th:text="${currentOrder.totalPrice()}+'$'"></span>
                 </div>
-                <input type="submit" value="Подтвердить заказ" class="btn btn-outline-primary">
+                <input type="submit"  value="Подтвердить заказ" class="btn btn-outline-primary">
             </form>
         </div>
     </div>
@@ -88,6 +88,10 @@
                 <form method="post" th:action="@{/orders/cancel/{id}(id = ${order.orderId})}"
                       th:unless="${order.getStatusString() == 'CANCELED' or order.getStatusString() == 'DONE'}" style="margin-top: 10px">
                     <button type="submit" class="btn btn-outline-danger">Отменить заказ</button>
+                </form>
+
+                <form method="post" th:action="@{/orders/pdf/{id}(id = ${order.orderId})}" style="margin-top: 10px">
+                    <button type="submit" class="btn btn-outline-primary">Сохранить чек в PDF</button>
                 </form>
             </div>
         </div>

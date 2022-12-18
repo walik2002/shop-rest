@@ -1,2 +1,4 @@
 server:
   port: 5001
+pdf:
+  directory = D:\\pdfs\\
